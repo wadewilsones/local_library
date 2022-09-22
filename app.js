@@ -9,6 +9,14 @@ var usersRouter = require('./routes/users');
 
 var app = express();
 
+
+// Set up MongoDB connection
+const mongoose = require("mongoose");
+const mongoDb = "mongodb+srv://ulada:ilovesushi@cluster0.wkkejup.mongodb.net/local_library?retryWrites=true&w=majority";
+mongoose.connect(mongoDb, {useNewUrlParser: true, useUnifiedTopology: true });
+const db = mongoose.connection;
+db.on("error", console.error.bind(console, "MongoDB connection error:"))
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -37,5 +45,8 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+
+
 
 module.exports = app;
