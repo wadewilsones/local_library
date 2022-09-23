@@ -9,7 +9,7 @@ const GenreSchema = new Schema({
 // Virtual for author's URL
 GenreSchema.virtual("url").get(function () {
     // We don't use an arrow function as we'll need the this object
-    return `/catalog/genres/${this._id}`;
+    return `/catalog/genre/${this._id}`;
   });
 
 module.exports = mongoose.model("Genres", GenreSchema);
