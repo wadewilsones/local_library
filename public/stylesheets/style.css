@@ -25,3 +25,8 @@ a:hover {
 h1{
   text-align: center;
 }
+
+#delete_btn{
+  color: white;
+  background-color: cornflowerblue;
+}

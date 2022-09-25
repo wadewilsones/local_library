@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { DateTime } = require("luxon");
 
 const Schema = mongoose.Schema;
 
@@ -27,6 +28,16 @@ AuthorSchema.virtual("name").get(function () {
 AuthorSchema.virtual("url").get(function () {
   // We don't use an arrow function as we'll need the this object
   return `/catalog/author/${this._id}`;
+});
+
+// Virtual for author's birth
+AuthorSchema.virtual("formatted_birth_date").get(function () {
+  return DateTime.fromJSDate(this.date_of_birth).toLocaleString(DateTime.DATE_MED);
+});
+
+// Virtual for author's death
+AuthorSchema.virtual("formatted_death_date").get(function () {
+  return DateTime.fromJSDate(this.date_of_death).toLocaleString(DateTime.DATE_MED);
 });
 
 // Export model
