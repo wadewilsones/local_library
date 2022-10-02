@@ -1,8 +1,11 @@
 extends layout
 
 block content
-  h1 Delete: #{book_title}
-    p Do you really want to delete this Book?
-  form(method='POST' action='')
-    input.btn.btn-primary(type="submit", value="Delete")
-
+  div.deleteForm
+    h2 #{book_title} 
+    h3.mainLinks by #{book_author}
+    p Do you really want to delete this Book? 
+    form(method='POST' action='')
+      input.createBookBtn(type="submit", value="Delete")
+    
+    a(class='homeBtn' href='/') Go Back to Home page

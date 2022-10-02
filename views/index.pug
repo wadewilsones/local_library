@@ -1,13 +1,19 @@
 extends layout
-
 block content
-  h1= title
-  if error
-    p Error getting dynamic content.
-  else
-    p The library has the following record counts:
 
-    ul
-      li #[strong Books:] !{data.book_count}
-      li #[strong Authors:] !{data.author_count}
-      li #[strong Genres:] !{data.genre_count}
+    div#bookHolder
+        if books.length <= 0
+            h1 No available books
+        else 
+            h1 Available Books
+            each book in books
+                div.bookStyle
+                    img(src = book.picture? `"${book.picture}"` : "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/330px-No-Image-Placeholder.svg.png?20200912122019" class= 'index-book-images')
+                    a(href=book.url)#Booktitle= book.title
+                    span by 
+                        a(href="#" class ='mainLinks')#author #{book.author? book.author.fullName : 'Unknown author'}
+                    if book.genre.length != 0
+                        a(href = book.genre[0].url+ "/detail")#genre= book.genre[0].name
+                    else
+                        p#genreNon No genre was assigned
+        a(href="catalog/book/create").addButtons#index_addBookBtn Add book

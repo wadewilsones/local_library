@@ -1,15 +1,17 @@
-extends layout
-
-block content
-  h1 #{title}
-
-  form(method='POST' action='')
-    div.form-group
-      label(for='name') Genre:
-      input#name.form-control(type='text', placeholder='Fantasy, Poetry etc.' name='name' value=(undefined===genre ? '' : genre.name))
-    button.btn.btn-primary(type='submit') Submit
-
-  if errors
-   ul
-    for error in errors
-     li!= error.msg
+doctype html
+html(lang='en')
+  head
+    title= title
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    block content
+    header
+      h1 Local Library Form
+    
+    h2(id='form_title')= title
+    form(action="" method="POST" class="new_form")
+      input(type="text" placeholder="Genre name..." name = "newGenre") 
+      input(type="submit" value = "Add Genre" class = "createBookBtn") 
+    a(class='homeBtn' href='/') Go Back to Home page
