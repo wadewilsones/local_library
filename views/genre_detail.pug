@@ -10,7 +10,7 @@ block content
 
         each book in books 
           div.bookStyle
-            img(src = "https://m.media-amazon.com/images/I/51SkIDTd9rL._AC_SY780_.jpg" class= 'index-book-images')
+            img(src = book.picture? `"${book.picture}"` : "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/330px-No-Image-Placeholder.svg.png?20200912122019" class= 'index-book-images')
             a(href=book.url)#Booktitle= book.title
             span by 
             a(href="#" class ='mainLinks')#author #{book.author? book.author.fullName : 'Unknown author'}

@@ -1,11 +1,21 @@
 const express = require("express");
 const router = express.Router();
+const multer = require("multer");
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, 'uploads')
+    },
+    filename: (req, file, cb) => {
+      cb(null, req.body.title + '-' + 'img')
+    }
+  })
+
+const upload = multer({storage: storage});
 
 // Require controller modules.
 const book_controller = require("../controllers/bookController");
 const author_controller = require("../controllers/authorController");
 const genre_controller = require("../controllers/genreController");
-
 
 /// BOOK ROUTES ///
 
@@ -16,7 +26,7 @@ router.get("/", book_controller.index); // this is a callback function (book_con
 router.get("/book/create", book_controller.book_create_get);
 
 // POST request for creating Book.
-router.post("/book/create", book_controller.book_create_post); 
+router.post("/book/create", upload.single('imageUpload'), book_controller.book_create_post); 
 
 // GET request to delete Book.
 router.get("/book/:id/delete", book_controller.book_delete_get);

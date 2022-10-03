@@ -2,9 +2,11 @@ const Book = require("../models/book");
 const Author = require("../models/author");
 const Genre = require("../models/genre");
 const async = require("async");
-const mongoose = require('mongoose')
 const { body, validationResult } = require("express-validator");
-
+var multer = require('multer');
+const path = require('path');
+const fs = require('fs-extra');
+const { dirname } = require("path");
 
 
 //Display genres and available books
@@ -23,6 +25,8 @@ exports.index = function (req, res, next) {
         return next(err)
       }
       else{
+        //transform buffer from DB to image
+
         res.render('index', {title:'Local Library', genres:result.genre, books:result.books})
       }
   })
@@ -91,6 +95,7 @@ exports.book_create_get = (req, res, next) => {
 
 // Handle book create on POST.
 exports.book_create_post = [
+
   // Convert the genre to an array.
   (req, res, next) => {
     if (!Array.isArray(req.body.genre)) {
@@ -119,7 +124,6 @@ exports.book_create_post = [
   (req, res, next) => {
     // Extract the validation errors from a request.
     const errors = validationResult(req);
-
     // Create a Book object with escaped and trimmed data.
     if (!errors.isEmpty()) {
       Genre.find((err, results) => {
@@ -144,27 +148,31 @@ exports.book_create_post = [
 
     }
 
-    //Work with added pictures
-
-    
-
     //Add author and books
+
     const author = new Author({ fullName: req.body.author});
     author.save().then(() => {
+
       Author.find({ fullName: req.body.author }, function (err, authorData) {
         if(err){
           return next(err)
         }
-        console.log(authorData[0]._id)
+
+        console.log(authorData)
+            //Fill out a new book 
         const book = new Book({
           title: req.body.title,
-          author: authorData[0]._id,
+          author: authorData[0].id,
           summary: req.body.summary,
           isbn: req.body.isbn,
           genre: req.body.genre,
-          picture: req.body.bookImage
-        });
-  
+          picture: {
+              data: fs.readFileSync(path.join(__dirname, '..', 'uploads/' + req.file.filename)),
+              contentType: 'image/png'
+          }
+  });
+
+
         book.save((err) => {
           if (err) {
             return next(err);
@@ -175,9 +183,6 @@ exports.book_create_post = [
         });
       })
       });
-      
-     
-    
   }];
 
 // Display book delete form on GET.

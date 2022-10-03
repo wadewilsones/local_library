@@ -9,9 +9,9 @@ const BookSchema = new Schema({
   isbn: { type: String, required: true },
   genre: [{ type: Schema.Types.ObjectId, ref: "Genres" }],
   picture: {
-    type: String, 
-    default: ''
-  }
+    data:Buffer,
+    contentType: String
+  }, 
 });
 
 // Virtual for book's URL
