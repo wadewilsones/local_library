@@ -2,10 +2,16 @@ extends layout
 
 block content
   div.deleteForm
-    h2 #{book_title} 
-    h3.mainLinks by #{book_author}
+    img(src = (book.picture.data != null) ? "data:image/jpg;base64," + `${Buffer.from(book.picture.data).toString('base64')}`
+    : "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/330px-No-Image-Placeholder.svg.png?20200912122019" class= 'index-book-images')
+    h2 #{book_title}
+    if book.author != null 
+      h3.mainLinks by #{book.author.fullName} 
+    else 
+      h3.mainLinks by Unknown author
+
     p Do you really want to delete this Book? 
     form(method='POST' action='')
-      input.createBookBtn(type="submit", value="Delete")
-    
+      input.deleteBtn(type="submit", value="Delete")
+
     a(class='homeBtn' href='/') Go Back to Home page

@@ -8,9 +8,10 @@ block content
             h1 Available Books
             each book in books
                 div.bookStyle
-                    img(src = (book.picture.data != '') ? "data:image/jpg;base64," + `${Buffer.from(book.picture.data).toString('base64')}`
-                    : "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/330px-No-Image-Placeholder.svg.png?20200912122019" class= 'index-book-images')
-                    a(href=book.url)#Booktitle= book.title
+                    a(href=book.url)
+                        img(src = (book.picture.data != null) ? "data:image/jpg;base64," + `${Buffer.from(book.picture.data).toString('base64')}`
+                        : "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/330px-No-Image-Placeholder.svg.png?20200912122019" class= 'index-book-images')
+                    a(href=book.url)#Booktitle #{book.title}
                     span by 
                         a(href="#" class ='mainLinks')#author #{book.author? book.author.fullName : 'Unknown author'}
                     if book.genre.length != 0
@@ -18,4 +19,3 @@ block content
                     else
                         p#genreNon No genre was assigned
         a(href="catalog/book/create").addButtons#index_addBookBtn Add book
-        script(src="/javascripts/imageProcessing.js") 

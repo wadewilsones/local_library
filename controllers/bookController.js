@@ -6,11 +6,11 @@ const { body, validationResult } = require("express-validator");
 var multer = require('multer');
 const path = require('path');
 const fs = require('fs-extra');
-const { dirname } = require("path");
 
 
 //Display genres and available books
 exports.index = function (req, res, next) {
+
   async.parallel({
     genre(callback){
       Genre.find({})
@@ -24,13 +24,12 @@ exports.index = function (req, res, next) {
       if(err){
         return next(err)
       }
-      else{
-        //transform buffer from DB to image
-
-        res.render('index', {title:'Local Library', genres:result.genre, books:result.books})
-      }
-  })
-}
+      else
+      {
+        res.render('index', {title:'Local Library', genres:result.genre, books: result.books})
+      }   
+      })
+};
 
 
 // Display detail page for a specific book.
@@ -158,7 +157,13 @@ exports.book_create_post = [
           return next(err)
         }
 
-        console.log(authorData)
+        let imageData = null;
+        if(req.body.imageUpload){
+          imageData = fs.readFileSync(path.join(__dirname, '..', 'uploads/' + req.file.filename));
+        }
+        else{
+          imageData = null;
+        }
             //Fill out a new book 
         const book = new Book({
           title: req.body.title,
@@ -167,7 +172,7 @@ exports.book_create_post = [
           isbn: req.body.isbn,
           genre: req.body.genre,
           picture: {
-              data: fs.readFileSync(path.join(__dirname, '..', 'uploads/' + req.file.filename)),
+              data: imageData,
               contentType: 'image/png'
           }
   });
@@ -178,7 +183,19 @@ exports.book_create_post = [
             return next(err);
           }
 
+          //Delete image from the upload folder
+
+          fs.unlink((path.join(__dirname, '..', 'uploads/' + req.file.filename)), (err) => {
+            if(err){
+              throw err
+            }
+            else{
+              console.log('Uploaded file was deleted')
+            }
+          })
+
           // Successful: redirect to new book record.
+
           res.redirect('/');
         });
       })
@@ -199,7 +216,7 @@ exports.book_delete_get = (req, res) => {
   if(err){
     return next(err);
   }
-  res.render('delete_book_form', {book_title:result.book.title, book_author:result.book.author.fullName, genres:result.genre})
+  res.render('delete_book_form', {book_title:result.book.title, book: result.book, genres:result.genre})
  })
     
 };
@@ -231,9 +248,6 @@ exports.book_update_get = (req, res, next) => {
           .populate("genre")
           .exec(callback);
       },
-      authors(callback) {
-        Author.find(callback);
-      },
       genres(callback) {
         Genre.find(callback);
       },
@@ -257,6 +271,7 @@ exports.book_update_get = (req, res, next) => {
           }
         }
       }
+      console.log(results.authors)
       res.render("book_form", {
         title: "Update Book",
         authors: results.authors,
@@ -299,6 +314,14 @@ exports.book_update_post = [
   (req, res, next) => {
     // Extract the validation errors from a request.
     const errors = validationResult(req);
+    let imageData = null;
+
+    if(req.body.imageUpload != null){
+      imageData = fs.readFileSync(path.join(__dirname, '..', 'uploads/' + req.file.filename));
+    }
+    else{
+      imageData = null;
+    }
     
     // Create a Book object with escaped/trimmed data and old id.
     const book = new Book({
@@ -307,7 +330,10 @@ exports.book_update_post = [
       summary: req.body.summary,
       isbn: req.body.isbn,
       genre: typeof req.body.genre === "undefined" ? [] : req.body.genre,
-      picture:req.body.bookImage,
+      picture: {
+        data: imageData,
+        contentType: 'image/png'
+    },
       _id: req.params.id, //This is required, or a new ID will be assigned!
     });
 
@@ -353,8 +379,20 @@ exports.book_update_post = [
         return next(err);
       }
 
+      if(imageData != null){
+        fs.unlink((path.join(__dirname, '..', 'uploads/' + req.file.filename)), (err) => {
+          if(err){
+            throw err
+          }
+          else{
+            console.log('Uploaded file was deleted')
+          }
+        })
+      }
+      
+
       // Successful: redirect to book detail page.
-      res.redirect(thebook.url);
+      res.redirect('/');
     });
   },
 ];

@@ -2,7 +2,8 @@ extends layout
 
 block content
   div.BookDetails
-    img(src = book.picture? `"${book.picture}"` : "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/330px-No-Image-Placeholder.svg.png?20200912122019")
+    img(src = (book.picture.data != null) ? "data:image/jpg;base64," + `${Buffer.from(book.picture.data).toString('base64')}`
+      : "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/330px-No-Image-Placeholder.svg.png?20200912122019")
     div#BookDataContainer
       h2 #{book.title}
       span 
@@ -11,13 +12,16 @@ block content
           if index < book.genre.length - 1
             |, 
           span  by  
-        a(href=book.author.url)    #{book.author.name}
+          if book.author 
+            a(href=book.author.url)  #{book.author.fullName}
+          else
+            a Unknown author
       p.summary  #{book.summary}
       p #[strong ISBN:] #{book.isbn}
 
       div.updateButtons
-          a(href=book.url+'/update') Update Book
-          a(href=book.url+'/delete'  class= 'deleteBtn') Delete Book
-        
+        a(href=book.url+'/update' class='updateBtn') Update Book
+        a(href=book.url+'/delete'  class= 'deleteBtn') Delete Book
+
 
   a(href='/').addButtons Back to Home

@@ -1,8 +1,11 @@
-
+extends layout
 
 block content
-  h1 Delete: #{genre_title}
-    p Do you really want to delete this Genre?
-  form(method='POST' action='')
-    input.btn.btn-primary(type="submit", value="Delete")
+  div.deleteForm
+    h2 #{genre_title.name}
+    p Do you really want to delete this genre? 
+    form(method='POST' action='')
+      input.deleteBtn(type="submit", value="Delete")
+    
+    a(class='homeBtn' href='/') Go Back to Home page
 

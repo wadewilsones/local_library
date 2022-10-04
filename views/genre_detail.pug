@@ -10,12 +10,13 @@ block content
 
         each book in books 
           div.bookStyle
-            img(src = book.picture? `"${book.picture}"` : "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/330px-No-Image-Placeholder.svg.png?20200912122019" class= 'index-book-images')
+            img(src = (book.picture.data != '') ? "data:image/jpg;base64," + `${Buffer.from(book.picture.data).toString('base64')}` : "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/330px-No-Image-Placeholder.svg.png?20200912122019" class= 'index-book-images')
             a(href=book.url)#Booktitle= book.title
             span by 
-            a(href="#" class ='mainLinks')#author #{book.author? book.author.fullName : 'Unknown author'}
+            a(class ='mainLinks')#author #{book.author? book.author.fullName : 'Unknown author'}
 
-    form(method='POST' action='')
-      input(type="submit", value="Delete Genre" class = "createBookBtn")
+
+    a(href=genre.url+'/delete' class= 'deleteBtn') Delete Genre
+     
 
   a(class='homeBtn' href='/') Go Back to Home page

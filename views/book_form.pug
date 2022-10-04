@@ -3,10 +3,10 @@ extends layout
 block content
   h1= title
 
-  form(method='POST' action='' enctype="multipart/form-data")#createBookForm
+  form(method='POST' action='' enctype="multipart/form-data"  accept-charset="utf-8")#createBookForm
     div.form-group
       input#title.form-control(type='text', placeholder='Book Title' name='title' required='true' value=(undefined===book ? '' : book.title) )
-      input#author.form-control(type='text', placeholder='Author name' name='author' required='true' )
+      input.form-control(type='text', placeholder='Author name' name='author' required='true' value = (null===book.author.fullName ? 'Unknown author' : book.author.fullName) )
 
     div.form-group
       textarea#summary.form-control(type='textarea', placeholder='Book Summary' name='summary' required='true') #{undefined===book ? '' : book.summary}

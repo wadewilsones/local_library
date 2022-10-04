@@ -59,11 +59,15 @@ exports.genre_create_post = [
 // Display Genre delete form on GET.
 exports.genre_delete_get = (req, res) => {
 
-  Genre.findById(req.params.id).exec(function (err, result){
-    if(err){
-      return next(err);
-    }
-    res.render('delete_genre_form', {genre_title:result.title})
+  Genre.find().then((allgenres) => {
+    Genre.findById(req.params.id).exec(function (err, result){
+      if(err){
+        return next(err);
+      }
+      console.log(result);
+      res.render('delete_genre_form', {genre_title:result, genres: allgenres})
+  })
+
  })
 
 };
@@ -76,7 +80,7 @@ exports.genre_delete_post = (req, res) => {
       return next(err)
     }
     else{
-      return res.redirect('/catalog/genres');
+      return res.redirect('/');
     }
   })
 };
