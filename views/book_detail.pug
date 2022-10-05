@@ -5,7 +5,7 @@ block content
     img(src = (book.picture.data != null) ? "data:image/jpg;base64," + `${Buffer.from(book.picture.data).toString('base64')}`
       : "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/330px-No-Image-Placeholder.svg.png?20200912122019")
     div#BookDataContainer
-      h2 #{book.title}
+      h2 #{title}
       span 
         each val, index in book.genre
           a(href=val.url) #{val.name}
@@ -16,7 +16,7 @@ block content
             a(href=book.author.url)  #{book.author.fullName}
           else
             a Unknown author
-      p.summary  #{book.summary}
+      p.summary  #{summary}
       p #[strong ISBN:] #{book.isbn}
 
       div.updateButtons

@@ -3,17 +3,17 @@ extends layout
 block content
   div.Booklist_by_Genre
     h2 #{genre.name} genre
-    if books.length <= 0
+    if formattedData.length <= 0
       h3 No #{genre.name} genre books available
     else 
     div#bookHolder
-
-        each book in books 
+        each book in formattedData 
           div.bookStyle
-            img(src = (book.picture.data != '') ? "data:image/jpg;base64," + `${Buffer.from(book.picture.data).toString('base64')}` : "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/330px-No-Image-Placeholder.svg.png?20200912122019" class= 'index-book-images')
-            a(href=book.url)#Booktitle= book.title
+            a(href=book.url)
+              img(src = (book.picture.data != null) ? "data:image/jpg;base64," + `${Buffer.from(book.picture.data).toString('base64')}` : "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/330px-No-Image-Placeholder.svg.png?20200912122019" class= 'index-book-images')
+            a(href=book.url)#Booktitle #{book.booktitle}
             span by 
-            a(class ='mainLinks')#author #{book.author? book.author.fullName : 'Unknown author'}
+            a(class ='mainLinks')#author #{book.author? book.author : 'Unknown author'}
 
 
     a(href=genre.url+'/delete' class= 'deleteBtn') Delete Genre

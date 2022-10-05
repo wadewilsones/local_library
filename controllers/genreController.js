@@ -3,6 +3,7 @@ const Book = require("../models/book");
 const async = require("async");
 const mongoose = require("mongoose");
 const { body, validationResult } = require("express-validator");
+const he = require('he');
 
 // Display Genre create form on GET.
 exports.genre_create_get = (req, res, next) => {
@@ -102,8 +103,20 @@ exports.genre_getBooks_byGenre = (req, res) => {
       if(err){
         return next(err)
       }
-      console.log(results.currentGenre);
-      res.render('genre_detail', {books: results.book, genres: results.genres, genre:results.currentGenre });
-    })
+      //Format output
+      const formattedData = [];
+      results.book.forEach(element => {
 
+          formattedData.push({
+            booktitle: he.decode(element.title),
+            summary:he.decode(element.summary),
+            author:he.decode(element.author.fullName),
+            genre:element.genre,
+            picture:element.picture,
+            url:element.url
+          })
+    })
+    res.render('genre_detail', {formattedData: formattedData, genres: results.genres, genre:results.currentGenre });
+  }
+)
 }

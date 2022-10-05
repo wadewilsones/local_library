@@ -3,10 +3,9 @@ const Author = require("../models/author");
 const Genre = require("../models/genre");
 const async = require("async");
 const { body, validationResult } = require("express-validator");
-var multer = require('multer');
 const path = require('path');
 const fs = require('fs-extra');
-
+const he = require('he');
 
 //Display genres and available books
 exports.index = function (req, res, next) {
@@ -26,7 +25,23 @@ exports.index = function (req, res, next) {
       }
       else
       {
-        res.render('index', {title:'Local Library', genres:result.genre, books: result.books})
+        //Create a new object with encoding
+        const formattedData = [];
+
+        (result.books.forEach(element => {
+
+          formattedData.push({
+
+            title: he.decode(element.title),
+            summary:he.decode(element.summary),
+            author:he.decode(element.author.fullName),
+            genre:element.genre,
+            picture:element.picture,
+            url:element.url
+          })
+        
+        }))
+        res.render('index', {title:'Local Library', genres:result.genre, formattedData:formattedData})
       }   
       })
 };
@@ -57,9 +72,14 @@ exports.book_detail = (req, res, next) => {
         err.status = 404;
         return next(err);
       }
+
+      let title = he.decode(results.book.title);
+      let summary = he.decode(results.book.summary);
+        console.log(title)
       // Successful, so render.
       res.render("book_detail", {
-        title: results.book.title,
+        title: title,
+        summary:summary,
         author:results.book.author,
         book: results.book,
         genres:results.genre
@@ -84,7 +104,7 @@ exports.book_create_get = (req, res, next) => {
       }
       res.render("book_form", {
         title: "Create Book",
-        authors: results.authors,
+        book: undefined,
         genres: results.genres,
       });
     }
@@ -271,10 +291,16 @@ exports.book_update_get = (req, res, next) => {
           }
         }
       }
-      console.log(results.authors)
+
+      let formatted_title = he.decode(results.book.title);
+      let formatted_author = he.decode(results.book.author.fullName);
+      let formatted_summary = he.decode(results.book.summary);
+  
       res.render("book_form", {
         title: "Update Book",
-        authors: results.authors,
+        book_title:formatted_title,
+        book_summary:formatted_summary,
+        book_author:formatted_author,
         genres: results.genres,
         book: results.book,
       });
@@ -314,15 +340,16 @@ exports.book_update_post = [
   (req, res, next) => {
     // Extract the validation errors from a request.
     const errors = validationResult(req);
-    let imageData = null;
 
-    if(req.body.imageUpload != null){
+    let imageData;
+
+    if(req.file != null){
       imageData = fs.readFileSync(path.join(__dirname, '..', 'uploads/' + req.file.filename));
     }
     else{
       imageData = null;
     }
-    
+    console.log(req.file);    
     // Create a Book object with escaped/trimmed data and old id.
     const book = new Book({
       title: req.body.title,
@@ -374,7 +401,9 @@ exports.book_update_post = [
     }
 
     // Data from form is valid. Update the record.
-    Book.findByIdAndUpdate(req.params.id, book, {}, (err, thebook) => {
+    Book.findByIdAndUpdate(req.params.id, book, {
+
+    }, (err, thebook) => {
       if (err) {
         return next(err);
       }

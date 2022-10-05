@@ -2,18 +2,19 @@ extends layout
 block content
 
     div#bookHolder
-        if books.length <= 0
+        
+        if formattedData.length <= 0
             h1 No available books
         else 
             h1 Available Books
-            each book in books
+            each book in formattedData
                 div.bookStyle
                     a(href=book.url)
                         img(src = (book.picture.data != null) ? "data:image/jpg;base64," + `${Buffer.from(book.picture.data).toString('base64')}`
                         : "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/330px-No-Image-Placeholder.svg.png?20200912122019" class= 'index-book-images')
                     a(href=book.url)#Booktitle #{book.title}
                     span by 
-                        a(href="#" class ='mainLinks')#author #{book.author? book.author.fullName : 'Unknown author'}
+                        a(href="#" class ='mainLinks')#author #{book.author? book.author : 'Unknown author'}
                     if book.genre.length != 0
                         a(href = book.genre[0].url+ "/detail")#genre= book.genre[0].name
                     else
