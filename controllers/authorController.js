@@ -1,4 +1,5 @@
 const Author = require("../models/author");
+const Genres = require("../models/genre")
 const async = require("async");
 const Book = require("../models/book");
 const { body, validationResult } = require("express-validator");
@@ -14,7 +15,10 @@ exports.author_detail = function (req, res, next) {
           Author.findById(req.params.id).exec(callback);
         },
         authors_books(callback) {
-          Book.find({ author: req.params.id }, "title summary").exec(callback);
+          Book.find({ author: req.params.id }).exec(callback);
+        },
+        genres(callback){
+          Genres.find().exec(callback);;
         },
       },
       (err, results) => {
@@ -29,9 +33,10 @@ exports.author_detail = function (req, res, next) {
           return next(err);
         }
         // Successful, so render.
-        res.render("author_detail", {
-          title: "Author Detail",
+        res.render("author_books", {
+          title: "Books by",
           author: results.author,
+          genres: results.genres,
           author_books: results.authors_books,
         });
       }

@@ -2,7 +2,7 @@ extends layout
 block content
 
     div#bookHolder
-        
+        book.author_id
         if formattedData.length <= 0
             h1 No available books
         else 
@@ -14,7 +14,7 @@ block content
                         : "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/330px-No-Image-Placeholder.svg.png?20200912122019" class= 'index-book-images')
                     a(href=book.url)#Booktitle #{book.title}
                     span by 
-                        a(href="#" class ='mainLinks')#author #{book.author? book.author : 'Unknown author'}
+                        a(href=book.author_data.url).mainLinks#author #{book.author? book.author : 'Unknown author'}
                     if book.genre.length != 0
                         a(href = book.genre[0].url+ "/detail")#genre= book.genre[0].name
                     else

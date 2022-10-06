@@ -1,0 +1,16 @@
+extends layout
+
+block content
+  div.Booklist_by_Genre
+    h2 #{title} #{author.fullName} 
+    if author_books.length <= 0
+      h3 Author doesn't have any books
+    else 
+    div#bookHolder
+        each book in author_books 
+          div.bookStyle
+            a(href=book.url)
+              img(src = (book.picture.data != null) ? "data:image/jpg;base64," + `${Buffer.from(book.picture.data).toString('base64')}` : "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/330px-No-Image-Placeholder.svg.png?20200912122019" class= 'index-book-images')
+            a(href=book.url)#Booktitle #{book.title}
+    
+  a(class='homeBtn' href='/') Go Back to Home page

@@ -35,6 +35,7 @@ exports.index = function (req, res, next) {
             title: he.decode(element.title),
             summary:he.decode(element.summary),
             author:he.decode(element.author.fullName),
+            author_data:element.author,
             genre:element.genre,
             picture:element.picture,
             url:element.url
