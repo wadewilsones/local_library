@@ -2,7 +2,7 @@
 
 ### CRUD application. Allows adding, removing, and updating book titles. MVC pattern.
 
-![alt text]([http://url/to/img.png] (https://raw.githubusercontent.com/wadewilsones/local_library/main/library.jpg))
+![alt text](https://raw.githubusercontent.com/wadewilsones/local_library/main/library.jpg] 
 
 ## Get started
 
