@@ -957,7 +957,7 @@ body {
   
       margin: auto;
       margin-top: 4em;
-      width:1200px;
+      width:100%;
       text-align: center;
     }
   
@@ -976,5 +976,6 @@ body {
       font-size:1.6em;
       margin-bottom: 1em;
     }
+  
   
 }
