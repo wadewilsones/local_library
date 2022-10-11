@@ -237,7 +237,8 @@ exports.book_delete_get = (req, res) => {
   if(err){
     return next(err);
   }
-  res.render('delete_book_form', {book_title:result.book.title, book: result.book, genres:result.genre})
+   const formattedbookTitle = he.decode(result.book.title);
+  res.render('delete_book_form', {book_title:formattedbookTitle, book: result.book, genres:result.genre})
  })
     
 };
